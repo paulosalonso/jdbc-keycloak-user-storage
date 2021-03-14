@@ -1,0 +1,35 @@
+version: '3'
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    environment:
+      DB_VENDOR: MYSQL
+      DB_ADDR: mysql
+      DB_USER: root
+      DB_PASSWORD: mysql
+      DB_DATABASE: keycloak
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+      KEYCLOAK_IMPORT: /opt/jboss/keycloak/imports/realm.json
+      KEYCLOAK_LOGLEVEL: DEBUG
+    volumes:
+      - ./keycloak/realm.json:/opt/jboss/keycloak/imports/realm.json
+      - ./keycloak/providers/jdbc-keycloak-user-storage-jar-with-dependencies.jar:/opt/jboss/keycloak/standalone/deployments/jdbc-keycloak-user-storage-jar-with-dependencies.jar
+    ports:
+      - 8050:8080
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  mysql:
+    image: mysql:8.0.23
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=mysql
+    volumes:
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 60s
+      retries: 10

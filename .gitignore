@@ -1,0 +1,4 @@
+/.idea/
+/jdbc-keycloak-user-storage.iml
+/target/
+/.docker/keycloak/providers/

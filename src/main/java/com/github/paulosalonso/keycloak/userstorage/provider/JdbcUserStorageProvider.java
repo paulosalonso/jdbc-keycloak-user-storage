@@ -1,0 +1,98 @@
+package com.github.paulosalonso.keycloak.userstorage.provider;
+
+import com.github.paulosalonso.keycloak.userstorage.configurations.PasswordEncodeType;
+import com.github.paulosalonso.keycloak.userstorage.database.UserDAO;
+import com.github.paulosalonso.keycloak.userstorage.model.User;
+import lombok.Builder;
+import lombok.extern.slf4j.Slf4j;
+import org.keycloak.component.ComponentModel;
+import org.keycloak.credential.CredentialInput;
+import org.keycloak.credential.CredentialInputValidator;
+import org.keycloak.credential.CredentialModel;
+import org.keycloak.models.KeycloakSession;
+import org.keycloak.models.RealmModel;
+import org.keycloak.models.UserModel;
+import org.keycloak.storage.StorageId;
+import org.keycloak.storage.UserStorageProvider;
+import org.keycloak.storage.user.UserLookupProvider;
+
+import java.util.Optional;
+import java.util.Properties;
+import java.util.function.Function;
+
+import static com.github.paulosalonso.keycloak.userstorage.configurations.Configurations.PASSWORD_ENCODE_TYPE;
+
+@Slf4j
+@Builder
+public class JdbcUserStorageProvider implements UserStorageProvider, UserLookupProvider, CredentialInputValidator {
+
+    private final UserDAO userDAO;
+    private final KeycloakSession session;
+    private final ComponentModel componentModel;
+    private final Properties properties;
+    private final PasswordEncoderFactory passwordEncoderFactory;
+
+    @Override
+    public UserModel getUserById(String id, RealmModel realmModel) {
+        id = new StorageId(id).getExternalId();
+        log.debug("Find user by external id: {}", id);
+        return findUser(userDAO::findById, id, realmModel);
+    }
+
+    @Override
+    public UserModel getUserByUsername(String username, RealmModel realmModel) {
+        log.debug("Find user by username: {}", username);
+        return findUser(userDAO::findByUsername, username, realmModel);
+    }
+
+    @Override
+    public UserModel getUserByEmail(String email, RealmModel realmModel) {
+        log.debug("Find user by email: {}", email);
+        return  findUser(userDAO::findByEmail, email, realmModel);
+    }
+
+    @Override
+    public boolean supportsCredentialType(String credentialType) {
+        log.debug(String.format("Checking credential support for: %s", credentialType));
+        return CredentialModel.SECRET.equals(credentialType);
+    }
+
+    @Override
+    public boolean isConfiguredFor(RealmModel realmModel, UserModel userModel, String credentialType) {
+        log.debug(String.format("Checking if credential type %s is configured for %s", credentialType, userModel.getUsername()));
+        return true;
+    }
+
+    @Override
+    public boolean isValid(RealmModel realmModel, UserModel userModel, CredentialInput credentialInput) {
+        log.debug("Validating credential with credential encoder {}", properties.getProperty(PASSWORD_ENCODE_TYPE));
+
+        var encoder = passwordEncoderFactory.getPasswordEncoder(PasswordEncodeType.of(properties.getProperty(PASSWORD_ENCODE_TYPE)));
+
+        try {
+            var storageId = new StorageId(userModel.getId());
+            return userDAO.findById(storageId.getExternalId())
+                    .map(User::getPassword)
+                    .map(password -> encoder.matches(credentialInput.getChallengeResponse(), password))
+                    .orElse(false);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public void close() {}
+
+    private <T> UserModel findUser(Function<T, Optional<User>> function, T param, RealmModel realmModel) {
+        var opt = function.apply(param)
+                .map(user -> new CustomUserModel(session, realmModel, componentModel, user));
+
+        if (opt.isPresent()) {
+            log.debug("User found");
+            return opt.get();
+        } else {
+            log.debug("User not found");
+            return null;
+        }
+    }
+}
