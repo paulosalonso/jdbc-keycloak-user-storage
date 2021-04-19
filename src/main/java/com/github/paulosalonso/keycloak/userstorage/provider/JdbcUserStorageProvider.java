@@ -71,11 +71,12 @@ public class JdbcUserStorageProvider implements UserStorageProvider, UserLookupP
 
         try {
             var storageId = new StorageId(userModel.getId());
-            return userDAO.findById(storageId.getExternalId())
-                    .map(User::getPassword)
+            log.debug("Searching password for user id: {}", storageId.getExternalId());
+            return userDAO.findPasswordByUserId(storageId.getExternalId())
                     .map(password -> encoder.matches(credentialInput.getChallengeResponse(), password))
                     .orElse(false);
         } catch (Exception e) {
+            log.error(e.getMessage(), e);
             return false;
         }
     }
