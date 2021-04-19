@@ -59,7 +59,6 @@ public class JdbcUserStorageProvider implements UserStorageProvider, UserLookupP
 
     @Override
     public boolean isConfiguredFor(RealmModel realmModel, UserModel userModel, String credentialType) {
-        log.debug(String.format("Checking if credential type %s is configured for %s", credentialType, userModel.getUsername()));
         return true;
     }
 
