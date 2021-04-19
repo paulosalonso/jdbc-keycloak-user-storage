@@ -1083,7 +1083,7 @@
           "user.query.value": [
             "SELECT id, email, senha FROM usuario"
           ],
-          "user.name.field": [
+          "user.username.field": [
             "email"
           ],
           "user.id.field": [
