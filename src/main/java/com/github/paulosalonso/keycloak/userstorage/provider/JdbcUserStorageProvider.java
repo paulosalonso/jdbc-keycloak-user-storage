@@ -8,10 +8,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.keycloak.component.ComponentModel;
 import org.keycloak.credential.CredentialInput;
 import org.keycloak.credential.CredentialInputValidator;
-import org.keycloak.credential.CredentialModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
+import org.keycloak.models.credential.PasswordCredentialModel;
 import org.keycloak.storage.StorageId;
 import org.keycloak.storage.UserStorageProvider;
 import org.keycloak.storage.user.UserLookupProvider;
@@ -54,7 +54,7 @@ public class JdbcUserStorageProvider implements UserStorageProvider, UserLookupP
     @Override
     public boolean supportsCredentialType(String credentialType) {
         log.debug(String.format("Checking credential support for: %s", credentialType));
-        return CredentialModel.SECRET.equals(credentialType);
+        return PasswordCredentialModel.TYPE.equals(credentialType);
     }
 
     @Override
