@@ -72,6 +72,26 @@ public class UserDAO {
         });
     }
 
+    public Optional<String> findPasswordByUserId(String id) {
+        return executeStatement(connection -> {
+            try {
+                var statement = connection.prepareStatement(prepareQuery(USER_ID_FIELD));
+                statement.setString(1, id);
+                statement.execute();
+
+                var resultSet = statement.getResultSet();
+
+                if (resultSet.next()) {
+                    return Optional.of(resultSet.getString(properties.getProperty(USER_PASSWORD_FIELD)));
+                }
+
+                return Optional.empty();
+            } catch (SQLException e) {
+                throw new RuntimeException("Error when finding user password", e);
+            }
+        });
+    }
+
     private <T> T executeStatement(Function<Connection, T> statement) {
         Connection connection = null;
 
