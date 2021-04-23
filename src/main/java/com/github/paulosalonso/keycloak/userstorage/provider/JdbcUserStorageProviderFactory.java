@@ -1,6 +1,8 @@
 package com.github.paulosalonso.keycloak.userstorage.provider;
 
 import com.github.paulosalonso.keycloak.userstorage.configurations.PasswordEncodeType;
+import com.github.paulosalonso.keycloak.userstorage.database.ConnectionFactory;
+import com.github.paulosalonso.keycloak.userstorage.database.ResultSetMapper;
 import com.github.paulosalonso.keycloak.userstorage.database.UserDAO;
 import org.keycloak.component.ComponentModel;
 import org.keycloak.component.ComponentValidationException;
@@ -58,9 +60,12 @@ public class JdbcUserStorageProviderFactory implements UserStorageProviderFactor
     @Override
     public JdbcUserStorageProvider create(KeycloakSession keycloakSession, ComponentModel componentModel) {
         var properties = toProperties(componentModel);
+        var connectionFactory = new ConnectionFactory(properties);
+        var resultSetMapper = new ResultSetMapper(properties);
+        var userDAO = new UserDAO(connectionFactory, properties, resultSetMapper);
 
         return JdbcUserStorageProvider.builder()
-                .userDAO(new UserDAO(properties))
+                .userDAO(userDAO)
                 .session(keycloakSession)
                 .componentModel(componentModel)
                 .properties(properties)
