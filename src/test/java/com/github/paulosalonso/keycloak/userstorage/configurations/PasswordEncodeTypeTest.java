@@ -8,6 +8,12 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 public class PasswordEncodeTypeTest {
 
     @Test
+    public void whenGetEnumEntriesAsStringListThenReturnString() {
+        var stringList = PasswordEncodeType.asStringList();
+        assertThat(stringList).containsExactly("BCRYPT", "MD5", "NONE");
+    }
+
+    @Test
     public void whenGetPasswordEncodeTypeOfNameThenReturnPasswordEncodeType() {
         var name = PasswordEncodeType.BCRYPT.name();
         var type = PasswordEncodeType.of(name);
