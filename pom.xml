@@ -36,6 +36,7 @@
         <pitest.version>1.5.2</pitest.version>
         <pitest-junit5-plugin.version>0.12</pitest-junit5-plugin.version>
         <testcontainers.version>1.15.2</testcontainers.version>
+        <commons-logging.version>1.2</commons-logging.version>
     </properties>
 
     <dependencies>
@@ -87,6 +88,12 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>${logback-classic.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>${commons-logging.version}</version>
         </dependency>
 
         <dependency>
