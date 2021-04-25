@@ -1,9 +1,10 @@
 package com.github.paulosalonso.keycloak.userstorage.provider;
 
 import com.github.paulosalonso.keycloak.userstorage.configurations.PasswordEncodeType;
+import com.github.paulosalonso.keycloak.userstorage.database.RoleDAO;
 import com.github.paulosalonso.keycloak.userstorage.database.UserDAO;
 import com.github.paulosalonso.keycloak.userstorage.model.User;
-import lombok.Builder;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.component.ComponentModel;
 import org.keycloak.credential.CredentialInput;
@@ -23,10 +24,11 @@ import java.util.function.Function;
 import static com.github.paulosalonso.keycloak.userstorage.configurations.Configurations.PASSWORD_ENCODE_TYPE;
 
 @Slf4j
-@Builder
+@RequiredArgsConstructor
 public class JdbcUserStorageProvider implements UserStorageProvider, UserLookupProvider, CredentialInputValidator {
 
     private final UserDAO userDAO;
+    private final RoleDAO roleDAO;
     private final KeycloakSession session;
     private final ComponentModel componentModel;
     private final Properties properties;
@@ -87,7 +89,7 @@ public class JdbcUserStorageProvider implements UserStorageProvider, UserLookupP
 
     private <T> UserModel findUser(Function<T, Optional<User>> function, T param, RealmModel realmModel) {
         var opt = function.apply(param)
-                .map(user -> new CustomUserModel(session, realmModel, componentModel, user));
+                .map(user -> new CustomUserModel(session, realmModel, componentModel, user, roleDAO.getRolesByUserId(user.getId())));
 
         if (opt.isPresent()) {
             log.debug("User found");

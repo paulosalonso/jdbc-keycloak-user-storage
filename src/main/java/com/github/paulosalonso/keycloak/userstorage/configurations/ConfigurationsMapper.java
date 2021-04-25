@@ -7,7 +7,6 @@ import org.keycloak.component.ComponentModel;
 import java.util.Properties;
 
 import static com.github.paulosalonso.keycloak.userstorage.configurations.Configurations.*;
-import static com.github.paulosalonso.keycloak.userstorage.configurations.Configurations.DB_PASSWORD;
 
 @Slf4j
 public final class ConfigurationsMapper {
@@ -47,6 +46,21 @@ public final class ConfigurationsMapper {
 
         properties.put(PASSWORD_ENCODE_TYPE, configurations.getFirst(PASSWORD_ENCODE_TYPE));
         log.debug("PASSWORD_ENCODE_TYPE: {}", properties.get(PASSWORD_ENCODE_TYPE));
+
+        properties.put(ROLE_QUERY, configurations.getFirst(ROLE_QUERY));
+        log.debug("ROLE_QUERY: {}", properties.get(ROLE_QUERY));
+
+        properties.put(ROLE_ID_FIELD, configurations.getFirst(ROLE_ID_FIELD));
+        log.debug("ROLE_ID_FIELD: {}", properties.get(ROLE_ID_FIELD));
+
+        properties.put(ROLE_NAME_FIELD, configurations.getFirst(ROLE_NAME_FIELD));
+        log.debug("ROLE_NAME_FIELD: {}", properties.get(ROLE_NAME_FIELD));
+
+        properties.put(ROLE_DESCRIPTION_FIELD, configurations.getFirst(ROLE_DESCRIPTION_FIELD));
+        log.debug("ROLE_DESCRIPTION_FIELD: {}", properties.get(ROLE_DESCRIPTION_FIELD));
+
+        properties.put(ROLE_USER_ID_FIELD, configurations.getFirst(ROLE_USER_ID_FIELD));
+        log.debug("ROLE_USER_ID_FIELD: {}", properties.get(ROLE_USER_ID_FIELD));
 
         return properties;
     }

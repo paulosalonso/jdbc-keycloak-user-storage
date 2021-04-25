@@ -5,8 +5,8 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class User {
-    private final String id;
-    private final String username;
-    private final String email;
+public class Role {
+    private String id;
+    private String name;
+    private String description;
 }

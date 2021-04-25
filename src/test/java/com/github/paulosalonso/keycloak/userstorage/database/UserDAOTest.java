@@ -43,7 +43,7 @@ public class UserDAOTest {
     private ConnectionFactory connectionFactory;
 
     @Mock
-    private ResultSetMapper resultSetMapper;
+    private UserMapper userMapper;
 
     @Mock
     private Connection connection;
@@ -67,7 +67,7 @@ public class UserDAOTest {
         var userOptional = Optional.of(User.builder().build());
 
         when(properties.getProperty(USER_ID_FIELD)).thenReturn(ID_FIELD);
-        when(resultSetMapper.map(resultSet)).thenReturn(userOptional);
+        when(userMapper.map(resultSet)).thenReturn(userOptional);
 
         var result = userDAO.findById("1");
 
@@ -87,7 +87,7 @@ public class UserDAOTest {
         verify(preparedStatement).setString(1, "1");
         verify(preparedStatement).execute();
         verify(preparedStatement).getResultSet();
-        verify(resultSetMapper).map(resultSet);
+        verify(userMapper).map(resultSet);
         verify(connection).close();
     }
 
@@ -107,7 +107,7 @@ public class UserDAOTest {
         verify(preparedStatement).setString(1, "1");
         verify(preparedStatement).execute();
         verifyNoMoreInteractions(preparedStatement);
-        verifyNoInteractions(resultSetMapper);
+        verifyNoInteractions(userMapper);
         verify(connection).close();
     }
 
@@ -116,7 +116,7 @@ public class UserDAOTest {
         var userOptional = Optional.of(User.builder().build());
 
         when(properties.getProperty(USER_USERNAME_FIELD)).thenReturn(USERNAME_FIELD);
-        when(resultSetMapper.map(resultSet)).thenReturn(userOptional);
+        when(userMapper.map(resultSet)).thenReturn(userOptional);
 
         var result = userDAO.findByUsername("fulano");
 
@@ -136,7 +136,7 @@ public class UserDAOTest {
         verify(preparedStatement).setString(1, "fulano");
         verify(preparedStatement).execute();
         verify(preparedStatement).getResultSet();
-        verify(resultSetMapper).map(resultSet);
+        verify(userMapper).map(resultSet);
         verify(connection).close();
     }
 
@@ -156,7 +156,7 @@ public class UserDAOTest {
         verify(preparedStatement).setString(1, "fulano");
         verify(preparedStatement).execute();
         verifyNoMoreInteractions(preparedStatement);
-        verifyNoInteractions(resultSetMapper);
+        verifyNoInteractions(userMapper);
         verify(connection).close();
     }
 
@@ -165,7 +165,7 @@ public class UserDAOTest {
         var userOptional = Optional.of(User.builder().build());
 
         when(properties.getProperty(USER_EMAIL_FIELD)).thenReturn(EMAIL_FIELD);
-        when(resultSetMapper.map(resultSet)).thenReturn(userOptional);
+        when(userMapper.map(resultSet)).thenReturn(userOptional);
 
         var result = userDAO.findByEmail("fulano@mail.com");
 
@@ -185,7 +185,7 @@ public class UserDAOTest {
         verify(preparedStatement).setString(1, "fulano@mail.com");
         verify(preparedStatement).execute();
         verify(preparedStatement).getResultSet();
-        verify(resultSetMapper).map(resultSet);
+        verify(userMapper).map(resultSet);
         verify(connection).close();
     }
 
@@ -205,7 +205,7 @@ public class UserDAOTest {
         verify(preparedStatement).setString(1, "fulano@mail.com");
         verify(preparedStatement).execute();
         verifyNoMoreInteractions(preparedStatement);
-        verifyNoInteractions(resultSetMapper);
+        verifyNoInteractions(userMapper);
         verify(connection).close();
     }
 
@@ -239,7 +239,7 @@ public class UserDAOTest {
         verify(preparedStatement).getResultSet();
         verify(resultSet).next();
         verify(resultSet).getString(PASSWORD_FIELD);
-        verifyNoInteractions(resultSetMapper);
+        verifyNoInteractions(userMapper);
         verify(connection).close();
     }
 
@@ -262,7 +262,7 @@ public class UserDAOTest {
         verify(preparedStatement).getResultSet();
         verify(resultSet).next();
         verifyNoMoreInteractions(resultSet);
-        verifyNoInteractions(resultSetMapper);
+        verifyNoInteractions(userMapper);
         verify(connection).close();
     }
 
@@ -283,7 +283,7 @@ public class UserDAOTest {
         verify(preparedStatement).execute();
         verifyNoMoreInteractions(preparedStatement);
         verifyNoInteractions(resultSet);
-        verifyNoInteractions(resultSetMapper);
+        verifyNoInteractions(userMapper);
         verify(connection).close();
     }
 
@@ -294,7 +294,7 @@ public class UserDAOTest {
         assertThatThrownBy(() -> userDAO.findById("1")).isExactlyInstanceOf(RuntimeException.class);
 
         verify(connectionFactory).getConnection();
-        verifyNoInteractions(connection, properties, preparedStatement, resultSetMapper);
+        verifyNoInteractions(connection, properties, preparedStatement, userMapper);
     }
 
     @Test

@@ -11,7 +11,7 @@ import java.util.Properties;
 import static com.github.paulosalonso.keycloak.userstorage.configurations.Configurations.*;
 
 @RequiredArgsConstructor
-public class ResultSetMapper {
+public class UserMapper {
 
     private final Properties properties;
 
@@ -26,5 +26,4 @@ public class ResultSetMapper {
 
         return Optional.empty();
     }
-
 }

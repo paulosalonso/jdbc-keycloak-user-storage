@@ -40,10 +40,7 @@
   "quickLoginCheckMilliSeconds": 1000,
   "maxDeltaTimeSeconds": 43200,
   "failureFactor": 30,
-  "defaultRoles": [
-    "offline_access",
-    "uma_authorization"
-  ],
+  "defaultRoles": [],
   "requiredCredentials": [
     "password"
   ],
@@ -1109,6 +1106,21 @@
           ],
           "enabled": [
             "true"
+          ],
+          "role.query.value": [
+            "SELECT DISTINCT p.id, p.nome, p.descricao FROM usuario u  JOIN usuario_grupo ug ON ug.usuario_id = u.id JOIN grupo_permissao gp ON gp.grupo_id = ug.grupo_id JOIN permissao p ON p.id = gp.permissao_id"
+          ],
+          "role.id.field": [
+            "id"
+          ],
+          "role.name.field": [
+            "nome"
+          ],
+          "role.description.field": [
+            "descricao"
+          ],
+          "role.userid.field": [
+            "u.id"
           ]
         }
       }

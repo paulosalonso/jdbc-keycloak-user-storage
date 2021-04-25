@@ -3,8 +3,6 @@ package com.github.paulosalonso.keycloak.userstorage.provider;
 import com.github.paulosalonso.keycloak.userstorage.configurations.ConfigurationsMapper;
 import com.github.paulosalonso.keycloak.userstorage.configurations.ConfigurationsValidator;
 import com.github.paulosalonso.keycloak.userstorage.configurations.PasswordEncodeType;
-import com.github.paulosalonso.keycloak.userstorage.database.UserDAO;
-import com.github.paulosalonso.keycloak.userstorage.provider.JdbcUserStorageProvider.JdbcUserStorageProviderBuilder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.keycloak.component.ComponentModel;
@@ -98,36 +96,14 @@ public class JdbcUserStorageProviderFactoryTest {
 
     @Test
     public void whenCreateThenReturnProvider() {
-        var provider = JdbcUserStorageProvider.builder().build();
-
-        try (var providerMock = mockStatic(JdbcUserStorageProvider.class);
-             var mapperMock = mockStatic(ConfigurationsMapper.class)) {
-
-            var providerBuilder = mock(JdbcUserStorageProviderBuilder.class);
+        try (var mapperMock = mockStatic(ConfigurationsMapper.class)) {
             var properties = mock(Properties.class);
-            providerMock.when(JdbcUserStorageProvider::builder).thenReturn(providerBuilder);
             mapperMock.when(() -> ConfigurationsMapper.toProperties(componentModel)).thenReturn(properties);
-            when(providerBuilder.build()).thenReturn(provider);
-
-            when(providerBuilder.componentModel(componentModel)).thenReturn(providerBuilder);
-            when(providerBuilder.passwordEncoderFactory(any(PasswordEncoderFactory.class))).thenReturn(providerBuilder);
-            when(providerBuilder.properties(properties)).thenReturn(providerBuilder);
-            when(providerBuilder.session(keycloakSession)).thenReturn(providerBuilder);
-            when(providerBuilder.userDAO(any(UserDAO.class))).thenReturn(providerBuilder);
-            when(providerBuilder.build()).thenReturn(provider);
 
             var providerReturned = factory.create(keycloakSession, componentModel);
 
-            assertThat(providerReturned).isSameAs(provider);
-
-            providerMock.verify(JdbcUserStorageProvider::builder);
+            assertThat(providerReturned).isNotNull();
             mapperMock.verify(() -> ConfigurationsMapper.toProperties(componentModel));
-            verify(providerBuilder).componentModel(componentModel);
-            verify(providerBuilder).passwordEncoderFactory(any(PasswordEncoderFactory.class));
-            verify(providerBuilder).properties(properties);
-            verify(providerBuilder).session(keycloakSession);
-            verify(providerBuilder).userDAO(any(UserDAO.class));
-            verify(providerBuilder).build();
         }
     }
 
