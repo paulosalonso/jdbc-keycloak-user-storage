@@ -15,10 +15,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ResultSetMapperTest {
+public class UserMapperTest {
 
     @InjectMocks
-    private ResultSetMapper resultSetMapper;
+    private UserMapper userMapper;
 
     @Mock
     private Properties properties;
@@ -37,7 +37,7 @@ public class ResultSetMapperTest {
         when(resultSet.getString("username")).thenReturn("fulano");
         when(resultSet.getString("email")).thenReturn("fulano@mail.com");
 
-        var userOptional = resultSetMapper.map(resultSet);
+        var userOptional = userMapper.map(resultSet);
 
         assertThat(userOptional)
                 .isPresent()
@@ -62,7 +62,7 @@ public class ResultSetMapperTest {
     public void givenAEmptyResultSetWhenMapThenReturnEmptyOptional() throws SQLException {
         when(resultSet.next()).thenReturn(false);
 
-        var userOptional = resultSetMapper.map(resultSet);
+        var userOptional = userMapper.map(resultSet);
 
         assertThat(userOptional).isEmpty();
 
