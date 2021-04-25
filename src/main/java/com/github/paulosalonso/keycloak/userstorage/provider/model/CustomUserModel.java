@@ -1,7 +1,7 @@
-package com.github.paulosalonso.keycloak.userstorage.provider;
+package com.github.paulosalonso.keycloak.userstorage.provider.model;
 
-import com.github.paulosalonso.keycloak.userstorage.model.Role;
-import com.github.paulosalonso.keycloak.userstorage.model.User;
+import com.github.paulosalonso.keycloak.userstorage.data.model.Role;
+import com.github.paulosalonso.keycloak.userstorage.data.model.User;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.component.ComponentModel;
 import org.keycloak.models.KeycloakSession;
@@ -44,7 +44,7 @@ public class CustomUserModel extends AbstractUserAdapter {
     }
 
     @Override
-    protected Set<RoleModel> getRoleMappingsInternal() {
+    public Set<RoleModel> getRoleMappingsInternal() {
         return roles;
     }
 }

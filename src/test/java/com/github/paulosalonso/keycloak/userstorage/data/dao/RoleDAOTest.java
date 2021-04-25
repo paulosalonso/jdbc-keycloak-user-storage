@@ -2,7 +2,7 @@ package com.github.paulosalonso.keycloak.userstorage.data.dao;
 
 import com.github.paulosalonso.keycloak.userstorage.data.database.StatementExecutor;
 import com.github.paulosalonso.keycloak.userstorage.data.mapper.RoleMapper;
-import com.github.paulosalonso.keycloak.userstorage.model.Role;
+import com.github.paulosalonso.keycloak.userstorage.data.model.Role;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

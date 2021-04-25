@@ -1,4 +1,4 @@
-package com.github.paulosalonso.keycloak.userstorage.provider;
+package com.github.paulosalonso.keycloak.userstorage.provider.model;
 
 import org.keycloak.models.RoleContainerModel;
 import org.keycloak.models.RoleModel;

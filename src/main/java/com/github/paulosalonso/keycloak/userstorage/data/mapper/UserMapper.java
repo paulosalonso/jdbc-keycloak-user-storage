@@ -1,6 +1,6 @@
 package com.github.paulosalonso.keycloak.userstorage.data.mapper;
 
-import com.github.paulosalonso.keycloak.userstorage.model.User;
+import com.github.paulosalonso.keycloak.userstorage.data.model.User;
 import lombok.RequiredArgsConstructor;
 
 import java.sql.ResultSet;

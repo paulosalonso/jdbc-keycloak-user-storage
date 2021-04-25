@@ -2,7 +2,7 @@ package com.github.paulosalonso.keycloak.userstorage.provider;
 
 import com.github.paulosalonso.keycloak.userstorage.data.dao.RoleDAO;
 import com.github.paulosalonso.keycloak.userstorage.data.dao.UserDAO;
-import com.github.paulosalonso.keycloak.userstorage.model.User;
+import com.github.paulosalonso.keycloak.userstorage.data.model.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.keycloak.component.ComponentModel;

@@ -285,7 +285,7 @@
                     </targetTests>
                     <excludedClasses>
                         <param>com.github.paulosalonso.keycloak.userstorage.configurations.ConfigurationsValidator</param>
-                        <param>com.github.paulosalonso.keycloak.userstorage.provider.AbstractRoleModel</param>
+                        <param>com.github.paulosalonso.keycloak.userstorage.provider.model.AbstractRoleModel</param>
                     </excludedClasses>
                 </configuration>
             </plugin>

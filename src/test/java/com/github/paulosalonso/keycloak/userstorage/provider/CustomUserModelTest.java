@@ -1,7 +1,8 @@
 package com.github.paulosalonso.keycloak.userstorage.provider;
 
-import com.github.paulosalonso.keycloak.userstorage.model.Role;
-import com.github.paulosalonso.keycloak.userstorage.model.User;
+import com.github.paulosalonso.keycloak.userstorage.data.model.Role;
+import com.github.paulosalonso.keycloak.userstorage.data.model.User;
+import com.github.paulosalonso.keycloak.userstorage.provider.model.CustomUserModel;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.keycloak.component.ComponentModel;

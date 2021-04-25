@@ -2,7 +2,7 @@ package com.github.paulosalonso.keycloak.userstorage.data.dao;
 
 import com.github.paulosalonso.keycloak.userstorage.data.database.StatementExecutor;
 import com.github.paulosalonso.keycloak.userstorage.data.mapper.RoleMapper;
-import com.github.paulosalonso.keycloak.userstorage.model.Role;
+import com.github.paulosalonso.keycloak.userstorage.data.model.Role;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.SQLException;

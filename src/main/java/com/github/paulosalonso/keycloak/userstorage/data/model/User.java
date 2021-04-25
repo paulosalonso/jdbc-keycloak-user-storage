@@ -1,4 +1,4 @@
-package com.github.paulosalonso.keycloak.userstorage.model;
+package com.github.paulosalonso.keycloak.userstorage.data.model;
 
 import lombok.Builder;
 import lombok.Getter;

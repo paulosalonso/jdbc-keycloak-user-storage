@@ -1,6 +1,6 @@
-package com.github.paulosalonso.keycloak.userstorage.provider;
+package com.github.paulosalonso.keycloak.userstorage.provider.model;
 
-import com.github.paulosalonso.keycloak.userstorage.model.Role;
+import com.github.paulosalonso.keycloak.userstorage.data.model.Role;
 import lombok.RequiredArgsConstructor;
 import org.keycloak.models.RoleContainerModel;
 
