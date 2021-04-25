@@ -31,8 +31,7 @@ public class RoleDAO {
     public List<Role> getRolesByUserId(String userId) {
         return executor.executeStatement(connection -> {
 
-            log.info("Searching roles by user id {}", userId);
-            log.info("Query: {}", query);
+            log.debug("Searching roles by user id {} with query: {}", userId, query);
 
             try {
                 var statement = connection.prepareStatement(query);

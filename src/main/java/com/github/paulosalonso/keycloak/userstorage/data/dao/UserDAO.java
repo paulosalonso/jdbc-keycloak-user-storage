@@ -90,7 +90,7 @@ public class UserDAO {
 
     private String prepareQuery(String wantedField) {
         var query = String.format("%s WHERE %s = ?", properties.getProperty(USER_QUERY), properties.getProperty(wantedField));
-        log.debug("{}", query);
+        log.debug("Searching user with query: {}", query);
         return query;
     }
 
