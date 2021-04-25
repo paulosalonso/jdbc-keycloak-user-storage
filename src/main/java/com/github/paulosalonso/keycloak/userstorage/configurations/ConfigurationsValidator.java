@@ -1,6 +1,6 @@
 package com.github.paulosalonso.keycloak.userstorage.configurations;
 
-import com.github.paulosalonso.keycloak.userstorage.database.ConnectionFactory;
+import com.github.paulosalonso.keycloak.userstorage.data.database.ConnectionFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.component.ComponentModel;
 import org.keycloak.component.ComponentValidationException;

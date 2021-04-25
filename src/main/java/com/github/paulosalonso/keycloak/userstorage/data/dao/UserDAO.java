@@ -1,5 +1,7 @@
-package com.github.paulosalonso.keycloak.userstorage.database;
+package com.github.paulosalonso.keycloak.userstorage.data.dao;
 
+import com.github.paulosalonso.keycloak.userstorage.data.database.StatementExecutor;
+import com.github.paulosalonso.keycloak.userstorage.data.mapper.UserMapper;
 import com.github.paulosalonso.keycloak.userstorage.model.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

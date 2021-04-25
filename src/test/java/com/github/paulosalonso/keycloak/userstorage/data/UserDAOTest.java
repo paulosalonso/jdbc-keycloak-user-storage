@@ -1,5 +1,8 @@
-package com.github.paulosalonso.keycloak.userstorage.database;
+package com.github.paulosalonso.keycloak.userstorage.data;
 
+import com.github.paulosalonso.keycloak.userstorage.data.dao.UserDAO;
+import com.github.paulosalonso.keycloak.userstorage.data.database.ConnectionFactory;
+import com.github.paulosalonso.keycloak.userstorage.data.mapper.UserMapper;
 import com.github.paulosalonso.keycloak.userstorage.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

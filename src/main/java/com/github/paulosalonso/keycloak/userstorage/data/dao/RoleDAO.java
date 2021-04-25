@@ -1,5 +1,7 @@
-package com.github.paulosalonso.keycloak.userstorage.database;
+package com.github.paulosalonso.keycloak.userstorage.data.dao;
 
+import com.github.paulosalonso.keycloak.userstorage.data.database.StatementExecutor;
+import com.github.paulosalonso.keycloak.userstorage.data.mapper.RoleMapper;
 import com.github.paulosalonso.keycloak.userstorage.model.Role;
 import lombok.extern.slf4j.Slf4j;
 

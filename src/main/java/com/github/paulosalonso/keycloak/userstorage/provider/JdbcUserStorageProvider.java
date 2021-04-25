@@ -1,8 +1,8 @@
 package com.github.paulosalonso.keycloak.userstorage.provider;
 
 import com.github.paulosalonso.keycloak.userstorage.configurations.PasswordEncodeType;
-import com.github.paulosalonso.keycloak.userstorage.database.RoleDAO;
-import com.github.paulosalonso.keycloak.userstorage.database.UserDAO;
+import com.github.paulosalonso.keycloak.userstorage.data.dao.RoleDAO;
+import com.github.paulosalonso.keycloak.userstorage.data.dao.UserDAO;
 import com.github.paulosalonso.keycloak.userstorage.model.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
