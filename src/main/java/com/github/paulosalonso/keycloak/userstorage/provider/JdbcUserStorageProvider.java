@@ -64,9 +64,11 @@ public class JdbcUserStorageProvider implements UserStorageProvider, UserLookupP
 
     @Override
     public boolean isValid(RealmModel realmModel, UserModel userModel, CredentialInput credentialInput) {
-        log.debug("Validating credential with credential encoder {}", properties.getProperty(PASSWORD_ENCODE_TYPE));
+        var encodeType = PasswordEncodeType.of(properties.getProperty(PASSWORD_ENCODE_TYPE));
 
-        var encoder = passwordEncoderFactory.getPasswordEncoder(PasswordEncodeType.of(properties.getProperty(PASSWORD_ENCODE_TYPE)));
+        log.debug("Validating credential with credential encoder {}", encodeType);
+
+        var encoder = passwordEncoderFactory.getPasswordEncoder(encodeType);
 
         try {
             var storageId = new StorageId(userModel.getId());

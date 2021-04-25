@@ -18,10 +18,10 @@ public class UserDAO {
     private final Properties properties;
     private final ResultSetMapper resultSetMapper;
 
-    public UserDAO(Properties properties) {
+    public UserDAO(ConnectionFactory connectionFactory, Properties properties, ResultSetMapper resultSetMapper) {
+        this.connectionFactory = connectionFactory;
         this.properties = properties;
-        this.connectionFactory = new ConnectionFactory(properties);
-        this.resultSetMapper = new ResultSetMapper(properties);
+        this.resultSetMapper = resultSetMapper;
     }
 
     public Optional<User> findById(String id) {
@@ -98,8 +98,6 @@ public class UserDAO {
         try {
             connection = connectionFactory.getConnection();
             return statement.apply(connection);
-        } catch (Exception e) {
-            throw new RuntimeException("Error when finding user", e);
         } finally {
             if (connection != null) {
                 try {
@@ -112,7 +110,7 @@ public class UserDAO {
     }
 
     private String prepareQuery(String wantedField) {
-        var query = String.format("%s WHERE %s = ?", properties.getProperty(USER_QUERY), properties.get(wantedField));
+        var query = String.format("%s WHERE %s = ?", properties.getProperty(USER_QUERY), properties.getProperty(wantedField));
         log.debug("{}", query);
         return query;
     }

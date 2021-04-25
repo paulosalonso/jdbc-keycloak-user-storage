@@ -1,6 +1,10 @@
 package com.github.paulosalonso.keycloak.userstorage.provider;
 
+import com.github.paulosalonso.keycloak.userstorage.configurations.ConfigurationsMapper;
+import com.github.paulosalonso.keycloak.userstorage.configurations.ConfigurationsValidator;
 import com.github.paulosalonso.keycloak.userstorage.configurations.PasswordEncodeType;
+import com.github.paulosalonso.keycloak.userstorage.database.ConnectionFactory;
+import com.github.paulosalonso.keycloak.userstorage.database.ResultSetMapper;
 import com.github.paulosalonso.keycloak.userstorage.database.UserDAO;
 import org.keycloak.component.ComponentModel;
 import org.keycloak.component.ComponentValidationException;
@@ -13,8 +17,6 @@ import org.keycloak.storage.UserStorageProviderFactory;
 import java.util.List;
 
 import static com.github.paulosalonso.keycloak.userstorage.configurations.Configurations.*;
-import static com.github.paulosalonso.keycloak.userstorage.configurations.ConfigurationsMapper.toProperties;
-import static com.github.paulosalonso.keycloak.userstorage.configurations.ConfigurationsValidator.validate;
 import static org.keycloak.provider.ProviderConfigProperty.*;
 
 public class JdbcUserStorageProviderFactory implements UserStorageProviderFactory<JdbcUserStorageProvider> {
@@ -52,15 +54,18 @@ public class JdbcUserStorageProviderFactory implements UserStorageProviderFactor
 
     @Override
     public void validateConfiguration(KeycloakSession session, RealmModel realm, ComponentModel componentModel) throws ComponentValidationException {
-        validate(componentModel);
+        ConfigurationsValidator.validate(componentModel);
     }
 
     @Override
     public JdbcUserStorageProvider create(KeycloakSession keycloakSession, ComponentModel componentModel) {
-        var properties = toProperties(componentModel);
+        var properties = ConfigurationsMapper.toProperties(componentModel);
+        var connectionFactory = new ConnectionFactory(properties);
+        var resultSetMapper = new ResultSetMapper(properties);
+        var userDAO = new UserDAO(connectionFactory, properties, resultSetMapper);
 
         return JdbcUserStorageProvider.builder()
-                .userDAO(new UserDAO(properties))
+                .userDAO(userDAO)
                 .session(keycloakSession)
                 .componentModel(componentModel)
                 .properties(properties)

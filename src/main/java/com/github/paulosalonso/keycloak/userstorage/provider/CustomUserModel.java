@@ -28,6 +28,6 @@ public class CustomUserModel extends AbstractUserAdapter {
 
     @Override
     public String getEmail() {
-        return super.getEmail();
+        return user.getEmail();
     }
 }

@@ -14,20 +14,20 @@ public class PasswordEncoderFactory {
     private final Map<PasswordEncodeType, PasswordEncoder> cache = new HashMap<>();
 
     public PasswordEncoder getPasswordEncoder(PasswordEncodeType type) {
-        return cache.getOrDefault(type, createPasswordEncoder(type));
+        if (cache.containsKey(type)) {
+            return cache.get(type);
+        }
+
+        var passwordEncoder = createPasswordEncoder(type);
+        cache.put(type, passwordEncoder);
+        return passwordEncoder;
     }
 
     private PasswordEncoder createPasswordEncoder(PasswordEncodeType type) {
-        PasswordEncoder encoder;
-
         switch (type) {
-            case BCRYPT: encoder = new BCryptPasswordEncoder(); break;
-            case MD5: encoder = new MessageDigestPasswordEncoder("MD5"); break;
-            default: encoder = NoOpPasswordEncoder.getInstance();
+            case BCRYPT: return new BCryptPasswordEncoder();
+            case MD5: return new MessageDigestPasswordEncoder("MD5");
+            default: return NoOpPasswordEncoder.getInstance();
         }
-
-        cache.put(type, encoder);
-
-        return encoder;
     }
 }
