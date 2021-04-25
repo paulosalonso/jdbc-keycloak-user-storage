@@ -1,6 +1,5 @@
-package com.github.paulosalonso.keycloak.userstorage.data;
+package com.github.paulosalonso.keycloak.userstorage.data.database;
 
-import com.github.paulosalonso.keycloak.userstorage.data.database.ConnectionFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

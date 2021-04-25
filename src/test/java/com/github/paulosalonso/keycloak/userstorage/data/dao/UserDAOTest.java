@@ -1,13 +1,13 @@
-package com.github.paulosalonso.keycloak.userstorage.data;
+package com.github.paulosalonso.keycloak.userstorage.data.dao;
 
-import com.github.paulosalonso.keycloak.userstorage.data.dao.UserDAO;
-import com.github.paulosalonso.keycloak.userstorage.data.database.ConnectionFactory;
+import com.github.paulosalonso.keycloak.userstorage.data.database.StatementExecutor;
 import com.github.paulosalonso.keycloak.userstorage.data.mapper.UserMapper;
 import com.github.paulosalonso.keycloak.userstorage.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -18,6 +18,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.function.Function;
 
 import static com.github.paulosalonso.keycloak.userstorage.configurations.Configurations.*;
 import static java.lang.String.format;
@@ -40,10 +41,10 @@ public class UserDAOTest {
     private UserDAO userDAO;
 
     @Mock
-    private Properties properties;
+    private StatementExecutor statementExecutor;
 
     @Mock
-    private ConnectionFactory connectionFactory;
+    private Properties properties;
 
     @Mock
     private UserMapper userMapper;
@@ -57,9 +58,11 @@ public class UserDAOTest {
     @Mock
     private ResultSet resultSet;
 
+    @Captor
+    private ArgumentCaptor<Function<Connection, Optional<User>>> functionCaptor;
+
     @BeforeEach
     public void setUp() throws SQLException {
-        lenient().when(connectionFactory.getConnection()).thenReturn(connection);
         lenient().when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
         lenient().when(preparedStatement.getResultSet()).thenReturn(resultSet);
         lenient().when(properties.getProperty(USER_QUERY)).thenReturn(BASE_QUERY);
@@ -69,17 +72,22 @@ public class UserDAOTest {
     public void whenFindUserByIdThenReturnOptionalWithUser() throws SQLException {
         var userOptional = Optional.of(User.builder().build());
 
+        when(statementExecutor.executeStatement(any(Function.class))).thenReturn(userOptional);
+
+        var result = userDAO.findById("1");
+        assertThat(result).isSameAs(userOptional);
+        verify(statementExecutor).executeStatement(functionCaptor.capture());
+        var function = functionCaptor.getValue();
+
         when(properties.getProperty(USER_ID_FIELD)).thenReturn(ID_FIELD);
         when(userMapper.map(resultSet)).thenReturn(userOptional);
 
-        var result = userDAO.findById("1");
-
-        assertThat(result).isSameAs(userOptional);
+        var functionUserOptional = function.apply(connection);
+        assertThat(functionUserOptional).isSameAs(userOptional);
 
         verify(properties).getProperty(USER_QUERY);
         verify(properties).getProperty(USER_ID_FIELD);
         verifyNoMoreInteractions(properties);
-        verify(connectionFactory).getConnection();
 
         var queryCaptor = ArgumentCaptor.forClass(String.class);
         verify(connection).prepareStatement(queryCaptor.capture());
@@ -91,44 +99,53 @@ public class UserDAOTest {
         verify(preparedStatement).execute();
         verify(preparedStatement).getResultSet();
         verify(userMapper).map(resultSet);
-        verify(connection).close();
     }
 
     @Test
     public void whenAnErrorOccursSearchingUserByIdThenThrowsRuntimeException() throws SQLException {
+        var exception = new RuntimeException();
+
+        when(statementExecutor.executeStatement(any(Function.class))).thenThrow(exception);
+
+        assertThatThrownBy(() -> userDAO.findById("1")).isSameAs(exception);
+        verify(statementExecutor).executeStatement(functionCaptor.capture());
+        var function = functionCaptor.getValue();
+
         doThrow(SQLException.class).when(preparedStatement).execute();
 
-        assertThatThrownBy(() -> userDAO.findById("1"))
+        assertThatThrownBy(() -> function.apply(connection))
                 .isExactlyInstanceOf(RuntimeException.class)
                 .hasCauseExactlyInstanceOf(SQLException.class);
 
         verify(properties).getProperty(USER_QUERY);
         verify(properties).getProperty(USER_ID_FIELD);
         verifyNoMoreInteractions(properties);
-        verify(connectionFactory).getConnection();
-        verify(connection).prepareStatement(anyString());
         verify(preparedStatement).setString(1, "1");
         verify(preparedStatement).execute();
         verifyNoMoreInteractions(preparedStatement);
         verifyNoInteractions(userMapper);
-        verify(connection).close();
     }
 
     @Test
     public void whenFindUserByUsernameThenReturnOptionalWithUser() throws SQLException {
         var userOptional = Optional.of(User.builder().build());
 
+        when(statementExecutor.executeStatement(any(Function.class))).thenReturn(userOptional);
+
+        var result = userDAO.findByUsername("fulano");
+        assertThat(result).isSameAs(userOptional);
+        verify(statementExecutor).executeStatement(functionCaptor.capture());
+        var function = functionCaptor.getValue();
+
         when(properties.getProperty(USER_USERNAME_FIELD)).thenReturn(USERNAME_FIELD);
         when(userMapper.map(resultSet)).thenReturn(userOptional);
 
-        var result = userDAO.findByUsername("fulano");
-
-        assertThat(result).isSameAs(userOptional);
+        var functionUserOptional = function.apply(connection);
+        assertThat(functionUserOptional).isSameAs(userOptional);
 
         verify(properties).getProperty(USER_QUERY);
         verify(properties).getProperty(USER_USERNAME_FIELD);
         verifyNoMoreInteractions(properties);
-        verify(connectionFactory).getConnection();
 
         var queryCaptor = ArgumentCaptor.forClass(String.class);
         verify(connection).prepareStatement(queryCaptor.capture());
@@ -140,44 +157,53 @@ public class UserDAOTest {
         verify(preparedStatement).execute();
         verify(preparedStatement).getResultSet();
         verify(userMapper).map(resultSet);
-        verify(connection).close();
     }
 
     @Test
     public void whenAnErrorOccursSearchingUserByUsernameThenThrowsRuntimeException() throws SQLException {
+        var exception = new RuntimeException();
+
+        when(statementExecutor.executeStatement(any(Function.class))).thenThrow(exception);
+
+        assertThatThrownBy(() -> userDAO.findByUsername("fulano")).isSameAs(exception);
+        verify(statementExecutor).executeStatement(functionCaptor.capture());
+        var function = functionCaptor.getValue();
+
         doThrow(SQLException.class).when(preparedStatement).execute();
 
-        assertThatThrownBy(() -> userDAO.findByUsername("fulano"))
+        assertThatThrownBy(() -> function.apply(connection))
                 .isExactlyInstanceOf(RuntimeException.class)
                 .hasCauseExactlyInstanceOf(SQLException.class);
 
         verify(properties).getProperty(USER_QUERY);
         verify(properties).getProperty(USER_USERNAME_FIELD);
         verifyNoMoreInteractions(properties);
-        verify(connectionFactory).getConnection();
-        verify(connection).prepareStatement(anyString());
         verify(preparedStatement).setString(1, "fulano");
         verify(preparedStatement).execute();
         verifyNoMoreInteractions(preparedStatement);
         verifyNoInteractions(userMapper);
-        verify(connection).close();
     }
 
     @Test
     public void whenFindUserByEmailThenReturnOptionalWithUser() throws SQLException {
         var userOptional = Optional.of(User.builder().build());
 
+        when(statementExecutor.executeStatement(any(Function.class))).thenReturn(userOptional);
+
+        var result = userDAO.findByEmail("fulano@mail.com");
+        assertThat(result).isSameAs(userOptional);
+        verify(statementExecutor).executeStatement(functionCaptor.capture());
+        var function = functionCaptor.getValue();
+
         when(properties.getProperty(USER_EMAIL_FIELD)).thenReturn(EMAIL_FIELD);
         when(userMapper.map(resultSet)).thenReturn(userOptional);
 
-        var result = userDAO.findByEmail("fulano@mail.com");
-
-        assertThat(result).isSameAs(userOptional);
+        var functionUserOptional = function.apply(connection);
+        assertThat(functionUserOptional).isSameAs(userOptional);
 
         verify(properties).getProperty(USER_QUERY);
         verify(properties).getProperty(USER_EMAIL_FIELD);
         verifyNoMoreInteractions(properties);
-        verify(connectionFactory).getConnection();
 
         var queryCaptor = ArgumentCaptor.forClass(String.class);
         verify(connection).prepareStatement(queryCaptor.capture());
@@ -189,47 +215,57 @@ public class UserDAOTest {
         verify(preparedStatement).execute();
         verify(preparedStatement).getResultSet();
         verify(userMapper).map(resultSet);
-        verify(connection).close();
     }
 
     @Test
     public void whenAnErrorOccursSearchingUserByEmailThenThrowsRuntimeException() throws SQLException {
+        var exception = new RuntimeException();
+
+        when(statementExecutor.executeStatement(any(Function.class))).thenThrow(exception);
+
+        assertThatThrownBy(() -> userDAO.findByEmail("fulano@mail.com")).isSameAs(exception);
+        verify(statementExecutor).executeStatement(functionCaptor.capture());
+        var function = functionCaptor.getValue();
+
         doThrow(SQLException.class).when(preparedStatement).execute();
 
-        assertThatThrownBy(() -> userDAO.findByEmail("fulano@mail.com"))
+        assertThatThrownBy(() -> function.apply(connection))
                 .isExactlyInstanceOf(RuntimeException.class)
                 .hasCauseExactlyInstanceOf(SQLException.class);
 
         verify(properties).getProperty(USER_QUERY);
         verify(properties).getProperty(USER_EMAIL_FIELD);
         verifyNoMoreInteractions(properties);
-        verify(connectionFactory).getConnection();
         verify(connection).prepareStatement(anyString());
         verify(preparedStatement).setString(1, "fulano@mail.com");
         verify(preparedStatement).execute();
         verifyNoMoreInteractions(preparedStatement);
         verifyNoInteractions(userMapper);
-        verify(connection).close();
     }
 
     @Test
     public void whenFindPasswordByUserIdThenReturnOptionalWithPassword() throws SQLException {
+        var passwordOptional = Optional.of("P@ssw0rd");
+
+        when(statementExecutor.executeStatement(any(Function.class))).thenReturn(passwordOptional);
+
+        var result = userDAO.findPasswordByUserId("1");
+        assertThat(result).isSameAs(passwordOptional);
+        verify(statementExecutor).executeStatement(functionCaptor.capture());
+        var function = functionCaptor.getValue();
+
         when(properties.getProperty(USER_ID_FIELD)).thenReturn(ID_FIELD);
         when(properties.getProperty(USER_PASSWORD_FIELD)).thenReturn(PASSWORD_FIELD);
         when(resultSet.next()).thenReturn(true);
         when(resultSet.getString(PASSWORD_FIELD)).thenReturn("P@ssw0rd");
 
-        var result = userDAO.findPasswordByUserId("1");
-
-        assertThat(result)
-                .isPresent()
-                .hasValue("P@ssw0rd");
+        var functionPasswordOptional = function.apply(connection);
+        assertThat(functionPasswordOptional).isEqualTo(passwordOptional);
 
         verify(properties).getProperty(USER_QUERY);
         verify(properties).getProperty(USER_ID_FIELD);
         verify(properties).getProperty(USER_PASSWORD_FIELD);
         verifyNoMoreInteractions(properties);
-        verify(connectionFactory).getConnection();
 
         var queryCaptor = ArgumentCaptor.forClass(String.class);
         verify(connection).prepareStatement(queryCaptor.capture());
@@ -243,22 +279,28 @@ public class UserDAOTest {
         verify(resultSet).next();
         verify(resultSet).getString(PASSWORD_FIELD);
         verifyNoInteractions(userMapper);
-        verify(connection).close();
     }
 
     @Test
     public void whenFindPasswordByNonexistentUserIdThenReturnEmptyOptional() throws SQLException {
+        var passwordOptional = Optional.empty();
+
+        when(statementExecutor.executeStatement(any(Function.class))).thenReturn(passwordOptional);
+
+        var result = userDAO.findPasswordByUserId("1");
+        assertThat(result).isSameAs(passwordOptional);
+        verify(statementExecutor).executeStatement(functionCaptor.capture());
+        var function = functionCaptor.getValue();
+
         when(properties.getProperty(USER_ID_FIELD)).thenReturn(ID_FIELD);
         when(resultSet.next()).thenReturn(false);
 
-        var result = userDAO.findPasswordByUserId("1");
-
-        assertThat(result).isEmpty();
+        var functionPasswordOptional = function.apply(connection);
+        assertThat(functionPasswordOptional).isSameAs(passwordOptional);
 
         verify(properties).getProperty(USER_QUERY);
         verify(properties).getProperty(USER_ID_FIELD);
         verifyNoMoreInteractions(properties);
-        verify(connectionFactory).getConnection();
         verify(connection).prepareStatement(anyString());
         verify(preparedStatement).setString(1, "1");
         verify(preparedStatement).execute();
@@ -266,49 +308,32 @@ public class UserDAOTest {
         verify(resultSet).next();
         verifyNoMoreInteractions(resultSet);
         verifyNoInteractions(userMapper);
-        verify(connection).close();
     }
 
     @Test
     public void whenAnErrorOccursSearchingPasswordByUserIdThenThrowsRuntimeException() throws SQLException {
+        var exception = new RuntimeException();
+
+        when(statementExecutor.executeStatement(any(Function.class))).thenThrow(exception);
+
+        assertThatThrownBy(() -> userDAO.findPasswordByUserId("1")).isSameAs(exception);
+        verify(statementExecutor).executeStatement(functionCaptor.capture());
+        var function = functionCaptor.getValue();
+
         doThrow(SQLException.class).when(preparedStatement).execute();
 
-        assertThatThrownBy(() -> userDAO.findPasswordByUserId("1"))
+        assertThatThrownBy(() -> function.apply(connection))
                 .isExactlyInstanceOf(RuntimeException.class)
                 .hasCauseExactlyInstanceOf(SQLException.class);
 
         verify(properties).getProperty(USER_QUERY);
         verify(properties).getProperty(USER_ID_FIELD);
         verifyNoMoreInteractions(properties);
-        verify(connectionFactory).getConnection();
         verify(connection).prepareStatement(anyString());
         verify(preparedStatement).setString(1, "1");
         verify(preparedStatement).execute();
         verifyNoMoreInteractions(preparedStatement);
         verifyNoInteractions(resultSet);
         verifyNoInteractions(userMapper);
-        verify(connection).close();
-    }
-
-    @Test
-    public void whenAnErrorOccursGettingConnectionThenThrowsRuntimeException() {
-        when(connectionFactory.getConnection()).thenThrow(RuntimeException.class);
-
-        assertThatThrownBy(() -> userDAO.findById("1")).isExactlyInstanceOf(RuntimeException.class);
-
-        verify(connectionFactory).getConnection();
-        verifyNoInteractions(connection, properties, preparedStatement, userMapper);
-    }
-
-    @Test
-    public void whenAnErrorOccursClosingConnectionThenThrowsRuntimeException() throws SQLException {
-        doThrow(SQLException.class).when(connection).close();
-
-        assertThatThrownBy(() -> userDAO.findById("1"))
-                .isExactlyInstanceOf(RuntimeException.class)
-                .hasCauseExactlyInstanceOf(SQLException.class)
-                .hasMessage("Error closing connection");
-
-        verify(connection).close();
     }
 }

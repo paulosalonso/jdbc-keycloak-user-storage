@@ -20,17 +20,13 @@ public class RoleMapper {
         var roles = new ArrayList<Role>();
 
         while(resultSet.next()) {
-            roles.add(mapRole(resultSet));
+            roles.add(Role.builder()
+                    .id(resultSet.getString(properties.getProperty(ROLE_ID_FIELD)))
+                    .name(resultSet.getString(properties.getProperty(ROLE_NAME_FIELD)))
+                    .description(resultSet.getString(properties.getProperty(ROLE_DESCRIPTION_FIELD)))
+                    .build());
         }
 
         return roles;
-    }
-
-    private Role mapRole(ResultSet resultSet) throws SQLException {
-        return Role.builder()
-                .id(resultSet.getString(properties.getProperty(ROLE_ID_FIELD)))
-                .name(resultSet.getString(properties.getProperty(ROLE_NAME_FIELD)))
-                .description(resultSet.getString(properties.getProperty(ROLE_DESCRIPTION_FIELD)))
-                .build();
     }
 }

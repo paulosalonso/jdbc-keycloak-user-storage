@@ -1,6 +1,5 @@
-package com.github.paulosalonso.keycloak.userstorage.data;
+package com.github.paulosalonso.keycloak.userstorage.data.mapper;
 
-import com.github.paulosalonso.keycloak.userstorage.data.mapper.UserMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -60,7 +59,7 @@ public class UserMapperTest {
     }
 
     @Test
-    public void givenAEmptyResultSetWhenMapThenReturnEmptyOptional() throws SQLException {
+    public void givenAnEmptyResultSetWhenMapThenReturnEmptyOptional() throws SQLException {
         when(resultSet.next()).thenReturn(false);
 
         var userOptional = userMapper.map(resultSet);

@@ -1,5 +1,6 @@
 package com.github.paulosalonso.keycloak.userstorage.provider;
 
+import com.github.paulosalonso.keycloak.userstorage.data.dao.RoleDAO;
 import com.github.paulosalonso.keycloak.userstorage.data.dao.UserDAO;
 import com.github.paulosalonso.keycloak.userstorage.model.User;
 import org.junit.jupiter.api.Test;
@@ -32,6 +33,9 @@ public class JdbcUserStorageProviderTest {
 
     @Mock
     private UserDAO userDAO;
+
+    @Mock
+    private RoleDAO roleDAO;
 
     @Mock
     private KeycloakSession session;

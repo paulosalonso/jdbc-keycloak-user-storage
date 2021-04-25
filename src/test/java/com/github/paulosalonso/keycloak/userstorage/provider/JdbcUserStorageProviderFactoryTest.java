@@ -44,28 +44,38 @@ public class JdbcUserStorageProviderFactoryTest {
     public void wheGetConfigPropertiesThenReturnConfigurationList() {
         var configurations = factory.getConfigProperties();
 
-        assertThat(configurations).hasSize(9);
+        assertThat(configurations).hasSize(14);
 
         assertConfiguration(getConfigurationByName(configurations, JDBC_URL),
-                JDBC_URL, "JDBC URL Connection", "URL to connect database with JDBC", STRING_TYPE, "jdbc:mysql://mysql/algafood", null, false);
+                JDBC_URL, "JDBC URL Connection", "URL to connect database with JDBC", STRING_TYPE, null, null, false);
         assertConfiguration(getConfigurationByName(configurations, DB_USER),
-                DB_USER, "Database user", "Database user", STRING_TYPE, "root", null, false);
+                DB_USER, "Database user", "Database user", STRING_TYPE, null, null, false);
         assertConfiguration(getConfigurationByName(configurations, DB_PASSWORD),
-                DB_PASSWORD, "Database password", "Database password", PASSWORD, "mysql", null, true);
+                DB_PASSWORD, "Database password", "Database password", PASSWORD, null, null, true);
         assertConfiguration(getConfigurationByName(configurations, USER_QUERY),
                 USER_QUERY, "User query", "Query to get users in database. It must contain the fields referring to the id, username, email and password. It should not contain the WHERE clause.",
-                STRING_TYPE, "SELECT id, email, senha FROM user", null, false);
+                STRING_TYPE, null, null, false);
         assertConfiguration(getConfigurationByName(configurations, USER_ID_FIELD),
-                USER_ID_FIELD, "User id field", "Name of id field in user query", STRING_TYPE, "id", null, false);
+                USER_ID_FIELD, "User id field", "Name of id field in user query", STRING_TYPE, null, null, false);
         assertConfiguration(getConfigurationByName(configurations, USER_USERNAME_FIELD),
-                USER_USERNAME_FIELD, "Username field", "Name of username field in user query", STRING_TYPE, "email", null, false);
+                USER_USERNAME_FIELD, "Username field", "Name of username field in user query", STRING_TYPE, null, null, false);
         assertConfiguration(getConfigurationByName(configurations, USER_EMAIL_FIELD),
-                USER_EMAIL_FIELD, "Email field", "Name of email field in user query", STRING_TYPE, "email", null, false);
+                USER_EMAIL_FIELD, "Email field", "Name of email field in user query", STRING_TYPE, null, null, false);
         assertConfiguration(getConfigurationByName(configurations, USER_PASSWORD_FIELD),
-                USER_PASSWORD_FIELD, "Password field", "Name of password field in user query", STRING_TYPE, "senha", null, false);
+                USER_PASSWORD_FIELD, "Password field", "Name of password field in user query", STRING_TYPE, null, null, false);
         assertConfiguration(getConfigurationByName(configurations, PASSWORD_ENCODE_TYPE),
                 PASSWORD_ENCODE_TYPE, "Password encode type", "If password is encoded in database, select the encode type",
                 LIST_TYPE, PasswordEncodeType.NONE.name(), PasswordEncodeType.asStringList(), false);
+        assertConfiguration(getConfigurationByName(configurations, ROLE_QUERY),
+                ROLE_QUERY, "Role query", "Query to get user roles. It must contain the fields referring to id, name and description. It shoud not contain the where clause.", STRING_TYPE, null, null, false);
+        assertConfiguration(getConfigurationByName(configurations, ROLE_ID_FIELD),
+                ROLE_ID_FIELD, "Role id field", "Name of id field in role query", STRING_TYPE, null, null, false);
+        assertConfiguration(getConfigurationByName(configurations, ROLE_NAME_FIELD),
+                ROLE_NAME_FIELD, "Role name field", "Name of name field in role query", STRING_TYPE, null, null, false);
+        assertConfiguration(getConfigurationByName(configurations, ROLE_DESCRIPTION_FIELD),
+                ROLE_DESCRIPTION_FIELD, "Role description field", "Name of description field in role query", STRING_TYPE, null, null, false);
+        assertConfiguration(getConfigurationByName(configurations, ROLE_USER_ID_FIELD),
+                ROLE_USER_ID_FIELD, "Role user id field", "Name of user id field in role query", STRING_TYPE, null, null, false);
     }
 
     @Test
