@@ -11,7 +11,7 @@ services:
       KEYCLOAK_USER: admin
       KEYCLOAK_PASSWORD: admin
       KEYCLOAK_IMPORT: /opt/jboss/keycloak/imports/realm.json
-      KEYCLOAK_LOGLEVEL: DEBUG
+#      KEYCLOAK_LOGLEVEL: DEBUG
     volumes:
       - ./keycloak/realm.json:/opt/jboss/keycloak/imports/realm.json
       - ./keycloak/providers/jdbc-keycloak-user-storage-jar-with-dependencies.jar:/opt/jboss/keycloak/standalone/deployments/jdbc-keycloak-user-storage-jar-with-dependencies.jar
