@@ -1,7 +1,5 @@
 package com.github.paulosalonso.keycloak.userstorage.provider;
 
-import com.github.paulosalonso.keycloak.userstorage.configurations.Configurations;
-import com.github.paulosalonso.keycloak.userstorage.configurations.PasswordEncodeType;
 import com.github.paulosalonso.keycloak.userstorage.database.UserDAO;
 import com.github.paulosalonso.keycloak.userstorage.model.User;
 import org.junit.jupiter.api.Test;
@@ -10,7 +8,6 @@ import org.keycloak.component.ComponentModel;
 import org.keycloak.credential.CredentialInput;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
-import org.keycloak.models.UserCredentialModel;
 import org.keycloak.models.UserModel;
 import org.keycloak.models.credential.PasswordCredentialModel;
 import org.keycloak.storage.StorageId;
@@ -175,6 +172,29 @@ public class JdbcUserStorageProviderTest {
         var isValid = provider.isValid(realmModel, userModel, credentialInput);
 
         assertThat(isValid).isTrue();
+
+        verify(userModel).getId();
+        verify(properties).getProperty(PASSWORD_ENCODE_TYPE);
+        verify(passwordEncoderFactory).getPasswordEncoder(BCRYPT);
+        verify(userDAO).findPasswordByUserId("external-id");
+        verify(credentialInput).getChallengeResponse();
+        verify(passwordEncoder).matches("any-input-password", "any-user-password");
+    }
+
+    @Test
+    public void whenValidateIncorrectCredentialThenReturnFalse() {
+        var keycloakId = new StorageId("provider-id", "external-id").getId();
+
+        when(userModel.getId()).thenReturn(keycloakId);
+        when(properties.getProperty(PASSWORD_ENCODE_TYPE)).thenReturn(BCRYPT.name());
+        when(passwordEncoderFactory.getPasswordEncoder(BCRYPT)).thenReturn(passwordEncoder);
+        when(userDAO.findPasswordByUserId("external-id")).thenReturn(Optional.of("any-user-password"));
+        when(credentialInput.getChallengeResponse()).thenReturn("any-input-password");
+        when(passwordEncoder.matches("any-input-password", "any-user-password")).thenReturn(false);
+
+        var isValid = provider.isValid(realmModel, userModel, credentialInput);
+
+        assertThat(isValid).isFalse();
 
         verify(userModel).getId();
         verify(properties).getProperty(PASSWORD_ENCODE_TYPE);

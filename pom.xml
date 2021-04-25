@@ -14,9 +14,9 @@
 
         <skipMutation>false</skipMutation>
 
-        <line.coverage>0</line.coverage>
-        <branch.coverage>0</branch.coverage>
-        <mutation.threshold>0</mutation.threshold>
+        <line.coverage>1.00</line.coverage>
+        <branch.coverage>1.00</branch.coverage>
+        <mutation.threshold>100</mutation.threshold>
 
         <keycloak.version>12.0.4</keycloak.version>
         <feign.version>11.0</feign.version>
@@ -209,8 +209,7 @@
                 <version>${jacoco.version}</version>
                 <configuration>
                     <excludes>
-                        <exclude>**/application/**</exclude>
-                        <exclude>**/domain/**</exclude>
+                        <exclude>**/ConfigurationsValidator.*</exclude>
                     </excludes>
                 </configuration>
                 <executions>
@@ -283,6 +282,9 @@
                     <targetTests>
                         <param>com.github.paulosalonso.keycloak.userstorage.*</param>
                     </targetTests>
+                    <excludedClasses>
+                        <param>com.github.paulosalonso.keycloak.userstorage.configurations.ConfigurationsValidator</param>
+                    </excludedClasses>
                 </configuration>
             </plugin>
         </plugins>

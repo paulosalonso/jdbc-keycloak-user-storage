@@ -45,14 +45,16 @@ public class PasswordEncoderFactoryTest {
     }
 
     @Test
-    public void whenGetPasswordEncoderModeThanOneTimeThenReturnCachedValue() throws NoSuchFieldException, IllegalAccessException {
+    public void whenGetPasswordEncoderMoreThanOneTimeThenReturnCachedValue() throws NoSuchFieldException, IllegalAccessException {
         var cacheSpy = spy(new HashMap<PasswordEncodeType, PasswordEncoder>());
         var cacheField = factory.getClass().getDeclaredField("cache");
         cacheField.setAccessible(true);
         cacheField.set(factory, cacheSpy);
 
-        var passwordEncoder = factory.getPasswordEncoder(BCRYPT);
         factory.getPasswordEncoder(BCRYPT);
+        var passwordEncoder = factory.getPasswordEncoder(BCRYPT);
+
+        assertThat(passwordEncoder).isInstanceOf(BCryptPasswordEncoder.class);
 
         verify(cacheSpy, times(2)).containsKey(BCRYPT);
         verify(cacheSpy).put(BCRYPT, passwordEncoder);
