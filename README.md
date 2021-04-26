@@ -6,9 +6,21 @@ Este projeto implementa um __user storage__ para busca de usuários em um banco 
 
 A documentação sobre como implementar um user storage está [nesta página](https://www.keycloak.org/docs/latest/server_development/#_user-storage-spi).
 
+## Qualidade
+
+[![Automated Testing](https://github.com/paulosalonso/jdbc-keycloak-user-storage/actions/workflows/automated-testing.yml/badge.svg)](https://github.com/paulosalonso/jdbc-keycloak-user-storage/actions/workflows/automated-testing.yml) [![Mutation Testing](https://github.com/paulosalonso/jdbc-keycloak-user-storage/actions/workflows/mutation-testing.yml/badge.svg)](https://github.com/paulosalonso/jdbc-keycloak-user-storage/actions/workflows/mutation-testing.yml)
+
+A qualidade do código é garantida através de testes unitários e testes de mutação.
+
 ## Como usar
 
 ### Artefato
+
+#### GitHub
+
+[![Release Package](https://github.com/paulosalonso/jdbc-keycloak-user-storage/actions/workflows/publish-package.yml/badge.svg)](https://github.com/paulosalonso/jdbc-keycloak-user-storage/actions/workflows/publish-package.yml)
+
+#### Local
 
 O primeiro passo é gerar o pacote do projeto:
 
