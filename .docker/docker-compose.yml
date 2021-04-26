@@ -14,7 +14,8 @@ services:
 #      KEYCLOAK_LOGLEVEL: DEBUG
     volumes:
       - ./keycloak/realm.json:/opt/jboss/keycloak/imports/realm.json
-      - ./keycloak/providers/jdbc-keycloak-user-storage-jar-with-dependencies.jar:/opt/jboss/keycloak/standalone/deployments/jdbc-keycloak-user-storage-jar-with-dependencies.jar
+#      - ./keycloak/providers/jdbc-keycloak-user-storage-jar-with-dependencies.jar:/opt/jboss/keycloak/standalone/deployments/jdbc-keycloak-user-storage-jar-with-dependencies.jar
+      - ./keycloak/providers:/opt/jboss/keycloak/standalone/deployments
     ports:
       - 8050:8080
     depends_on:

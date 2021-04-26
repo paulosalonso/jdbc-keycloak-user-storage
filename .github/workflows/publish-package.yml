@@ -1,4 +1,4 @@
-name: Maven Package
+name: Release Package
 
 on:
   release:
@@ -28,6 +28,9 @@ jobs:
 
       - name: Extracting tag
         run: echo "VERSION=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
+
+      - name: Maven Package
+        run: mvn clean package
 
       - name: Moving artifact to staging folder
         run: mkdir staging && cp target/jdbc-keycloak-user-storage-${VERSION}.jar staging
