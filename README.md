@@ -20,6 +20,8 @@ A qualidade do código é garantida através de testes unitários e testes de mu
 
 [![Release Package](https://github.com/paulosalonso/jdbc-keycloak-user-storage/actions/workflows/publish-package.yml/badge.svg?branch=1.0.0)](https://github.com/paulosalonso/jdbc-keycloak-user-storage/actions/workflows/publish-package.yml)
 
+Baixe o JAR compactado [aqui](https://github.com/paulosalonso/jdbc-keycloak-user-storage/suites/2584381410/artifacts/56396756)
+
 #### Local
 
 O primeiro passo é gerar o pacote do projeto:
