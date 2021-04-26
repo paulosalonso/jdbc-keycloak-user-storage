@@ -26,7 +26,19 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      - name: Publish to GitHub Packages Apache Maven
-        run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
+      - name: Extracting tag
+        run: echo "VERSION=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
+
+      - name: Moving artifact to staging folder
+        run: mkdir staging && cp target/jdbc-keycloak-user-storage-${VERSION}.jar staging
+
+      - name: Uploading artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: package
+          path: staging
+
+#      - name: Publish to GitHub Packages Apache Maven
+#        run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml
+#        env:
+#          GITHUB_TOKEN: ${{ github.token }}
