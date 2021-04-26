@@ -14,11 +14,11 @@ A qualidade do código é garantida através de testes unitários e testes de mu
 
 ## Como usar
 
-### Artefato
+### Pacote JAR
 
 #### GitHub
 
-[![Release Package](https://github.com/paulosalonso/jdbc-keycloak-user-storage/actions/workflows/publish-package.yml/badge.svg)](https://github.com/paulosalonso/jdbc-keycloak-user-storage/actions/workflows/publish-package.yml)
+[![Release Package](https://github.com/paulosalonso/jdbc-keycloak-user-storage/actions/workflows/publish-package.yml/badge.svg?branch=1.0.0)](https://github.com/paulosalonso/jdbc-keycloak-user-storage/actions/workflows/publish-package.yml)
 
 #### Local
 
