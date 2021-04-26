@@ -8,13 +8,13 @@
     <artifactId>jdbc-keycloak-user-storage</artifactId>
     <version>1.0.0</version>
 
-<!--    <distributionManagement>-->
-<!--        <repository>-->
-<!--            <id>github</id>-->
-<!--            <name>GitHub OWNER Apache Maven Packages</name>-->
-<!--            <url>https://maven.pkg.github.com/paulosalonso/jdbc-keycloak-user-storage</url>-->
-<!--        </repository>-->
-<!--    </distributionManagement>-->
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub OWNER Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/paulosalonso/jdbc-keycloak-user-storage</url>
+        </repository>
+    </distributionManagement>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
